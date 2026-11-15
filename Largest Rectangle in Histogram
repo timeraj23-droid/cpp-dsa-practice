@@ -1,0 +1,33 @@
+#include <vector>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+class Solution {
+public:
+    int largestRectangleArea(vector<int>& heights) {
+        stack<int> st; // Stores indices in monotonic increasing order of height
+        int max_area = 0;
+        int n = heights.size();
+
+        // Loop up to n (inclusive) to process a sentinel height of 0 at the end
+        for (int i = 0; i <= n; ++i) {
+            int current_height = (i == n) ? 0 : heights[i];
+
+            // Pop bars that are taller than the current bar
+            while (!st.empty() && current_height < heights[st.top()]) {
+                int h = heights[st.top()];
+                st.pop();
+
+                // If stack is empty, no smaller bar exists to the left
+                int width = st.empty() ? i : (i - st.top() - 1);
+                max_area = max(max_area, h * width);
+            }
+
+            st.push(i);
+        }
+
+        return max_area;
+        
+    }
+};
